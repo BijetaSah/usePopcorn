@@ -15,7 +15,6 @@ StarRating.propTypes = {
   size: PropTypes.number,
   defaultRating: PropTypes.number,
   messages: PropTypes.array,
-  onSetRating: PropTypes.func,
 };
 export default function StarRating({
   maxRating = 5,
