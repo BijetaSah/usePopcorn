@@ -1,4 +1,11 @@
+import { useEffect } from "react";
 export function WatchedMovieLists({ watched, onWatchedDelete }) {
+  useEffect(
+    function () {
+      localStorage.setItem("watched", JSON.stringify(watched));
+    },
+    [watched]
+  );
   return (
     <ul className="list">
       {watched.map((movie) => (

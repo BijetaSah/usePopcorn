@@ -9,8 +9,6 @@ Features:
 
 🎥 View detailed movie information
 
-📱 Fully responsive design
-
 💾 State management with React hooks
 
 Built for learning React fundamentals including state, props, effects, conditional rendering, and more.
