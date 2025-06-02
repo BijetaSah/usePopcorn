@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StarRating from "../starRating";
 import Loader from "./loader";
 import "../index.css";
 import { KEY } from "./utility";
+import { useKeyEvent } from "./useKeyEvent";
+
 export default function MovieDetails({
   selectedId,
   onCloseMovie,
@@ -12,6 +14,8 @@ export default function MovieDetails({
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
+
+  const countRef = useRef(0);
 
   const isWatched = watched.map((movie) => movie.imdbId).includes(selectedId);
   const watchedUserRating = watched.find(
@@ -38,6 +42,7 @@ export default function MovieDetails({
       title,
       userRating,
       runtime: Number(runtime.split(" ").at(0)),
+      countRatingDecision: countRef.current,
     };
     onWatchedAdd(newWatchedMovie);
     onCloseMovie();
@@ -75,19 +80,16 @@ export default function MovieDetails({
     },
     [title]
   );
+
   useEffect(
     function () {
-      function callback(e) {
-        if (e.key === "Escape") onCloseMovie();
-      }
-      document.addEventListener("keydown", callback);
-
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
+      if (userRating) countRef.current++;
     },
-    [onCloseMovie]
+    [userRating]
   );
+
+  // closing the movie summary on escape key
+  useKeyEvent("Escape", onCloseMovie);
 
   return (
     <div className="details">

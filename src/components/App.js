@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../index.css";
-import { KEY } from "./utility.js";
 import { SearchResult } from "./searchQuery.js";
 import Box from "./box.js";
 import Loader from "./loader.js";
@@ -9,53 +8,17 @@ import MovieList from "./movieList.js";
 import ErrorMessage from "./errorMessage.js";
 import { WatchedSummary } from "./watchedSummary.js";
 import { WatchedMovieLists } from "./watchedMovie.js";
+import { useMovie } from "./useMovie.js";
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [watched, setWatched] = useState(function () {
     const storedValue = localStorage.getItem("watched");
     return JSON.parse(storedValue);
   });
 
-  useEffect(() => {
-    const controller = new AbortController();
-    async function fetchMovies() {
-      try {
-        setIsLoading(true);
-        setError("");
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-          { signal: controller.signal }
-        );
-
-        if (!res.ok)
-          throw new Error("🛑 Something went wrong while fetching movies");
-
-        const data = await res.json();
-        if (data.Response === "False") throw new Error("Movie not found");
-        setMovies(data.Search);
-      } catch (err) {
-        if (err.name === "AbortError") return;
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    if (!query) {
-      setMovies([]);
-      setError("");
-      return;
-    }
-    handleCloseMovie();
-    fetchMovies();
-    return function () {
-      controller.abort();
-    };
-  }, [query]);
+  const { movies, isLoading, error } = useMovie(query, handleCloseMovie);
 
   function handleSelection(id) {
     setSelectedId((selected) => (id === selected ? null : id));
@@ -73,7 +36,11 @@ export default function App() {
     <>
       <Navbar>
         <Logo />
-        <SearchResult query={query} setQuery={setQuery} />
+        <SearchResult
+          query={query}
+          setQuery={setQuery}
+          handleCloseMovie={handleCloseMovie}
+        />
         <NumberOfResults movies={movies} />
       </Navbar>
       <Main>

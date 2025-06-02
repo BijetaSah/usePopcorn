@@ -1,22 +1,16 @@
 import "../index.css";
 import { useEffect, useRef } from "react";
-export function SearchResult({ query, setQuery }) {
+import { useKeyEvent } from "./useKeyEvent";
+export function SearchResult({ query, setQuery, handleCloseMovie }) {
   const inputEl = useRef(null);
-  useEffect(
-    function () {
-      inputEl.current.focus();
 
-      const callback = function (e) {
-        if (e.key === "Enter") setQuery("");
-      };
-      document.addEventListener("keydown", callback);
+  // focusing on input on Enter
+  useKeyEvent("Enter", function () {
+    inputEl.current.focus();
+    setQuery("");
+    handleCloseMovie();
+  });
 
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [inputEl, setQuery]
-  );
   return (
     <input
       className="search"
