@@ -1,5 +1,5 @@
 import "../index.css";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useKeyEvent } from "./useKeyEvent";
 export function SearchResult({ query, setQuery, handleCloseMovie }) {
   const inputEl = useRef(null);
