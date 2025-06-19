@@ -1,7 +1,8 @@
 import { average } from "./utility";
 
 export function WatchedSummary({ watched }) {
-  if (watched.length < 0) return;
+  console.log(watched);
+
   const avgImdbRating = average(watched.map((movie) => movie.rating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
   const avgRuntime = average(watched.map((movie) => movie.runtime));
