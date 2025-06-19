@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "../index.css";
 import { SearchResult } from "./searchQuery.js";
 import Box from "./box.js";
@@ -18,14 +18,18 @@ export default function App() {
     return JSON.parse(storedValue);
   });
 
+  const handleCloseMovie = useCallback(() => {
+    setSelectedId(null);
+  }, []);
   const { movies, isLoading, error } = useMovie(query, handleCloseMovie);
 
   function handleSelection(id) {
     setSelectedId((selected) => (id === selected ? null : id));
   }
-  function handleCloseMovie() {
-    setSelectedId(null);
-  }
+  // function handleCloseMovie() {
+  //   setSelectedId(null);
+  // }
+
   function handleWatchedAdd(movie) {
     setWatched((watched) => [...watched, movie]);
   }
